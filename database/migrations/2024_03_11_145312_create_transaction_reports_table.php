@@ -13,13 +13,10 @@ return new class extends Migration
     {
         Schema::create('transaction_reports', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('order_id');
             $table->date('date');
-            $table->integer('profit');
-            $table->integer('loss');
+            $table->enum('status', ['profit', 'loss']);
+            $table->integer('amount');
             $table->timestamps();
-
-            $table->foreign('order_id')->references('id')->on('orders')->onDelete('restrict');
         });
     }
 

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\OrderDetail;
+use App\Models\TransactionReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -63,7 +64,7 @@ class OrderController extends Controller
         }
 
         return response()->json([
-            'msg' => 'Berhasil masuk ke chart'
+            'msg' => 'Berhasil masuk ke cart'
         ]);
     }
 
@@ -85,6 +86,50 @@ class OrderController extends Controller
 
         return response()->json([
             'msg' => 'Berhasil Checkout'
+        ]);
+    }
+
+    public function transaction_report(Request $request)
+    {
+        // hitung per hari
+        $orders_per_day = Order::where('date', Carbon::now()->format('Y-m-d'))->where('status', 'paid')->get();
+        // dd(Carbon::now()->format('Y-m-d'));
+        if (count($orders_per_day) > 0) {
+            $amount = 0;
+            foreach ($orders_per_day as $item) {
+                $amount += $item->total_price;
+            }
+
+            // cek dah ada atau belum
+            $check_transaction = TransactionReport::where('date', Carbon::now()->format('Y-m-d'))->first();
+
+            if (empty($check_transaction)) {
+                $datas = TransactionReport::create([
+                    'order_id' => null,
+                    'date' => Carbon::now(),
+                    'status' => $amount > 50000 ? 'profit' : 'loss',
+                    'amount' => $amount
+                ]);
+            } else {
+                $check_transaction->update([
+                    'amount' => $amount,
+                    'status' => $amount > 50000 ? 'profit' : 'loss'
+                ]);
+
+                return response()->json([
+                    'msg' => 'Berhasil membuat laporan transaksi hari ini',
+                    'data' => $check_transaction
+                ]);
+            }
+
+            return response()->json([
+                'msg' => 'Berhasil membuat laporan transaksi hari ini',
+                'data' => $datas
+            ]);
+        }
+        return response()->json([
+            'msg' => 'Gagal membuat laporan transaksi hari ini',
+            'error' => 'Gagal ambil data'
         ]);
     }
 
