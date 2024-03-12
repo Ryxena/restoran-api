@@ -14,13 +14,13 @@ class TotalProductOverview extends BaseWidget
     {
         return [
             Stat::make('Total Product', Product::count())
-            ->description('Info product ygy')
+            ->color('success')
             ->descriptionIcon('heroicon-m-arrow-trending-up'),
             Stat::make('Total Product', Product::count())
-            ->description('Info product ygy')
+            ->description('')
             ->descriptionIcon('heroicon-m-arrow-trending-up'),
             Stat::make('Total Product', Product::count())
-            ->description('Info product ygy')
+            ->description('')
             ->descriptionIcon('heroicon-m-arrow-trending-up'),
         ];
     }
