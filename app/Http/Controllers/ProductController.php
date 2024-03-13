@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\product;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
@@ -37,11 +38,18 @@ class ProductController extends Controller
      */
     public function show(product $product)
     {
-        $most_freq = OrderDetail::select(['product_id', 'product_count'])->get();
-        $arr = [];
-        foreach ($most_freq as $item) {
+        $orders = Order::where('status', 'paid')->get();
+
+        $products = [];
+        foreach ($orders as $order) {
+            $most_freq = OrderDetail::where('order_id', $order->id)->select(['product_id', 'product_count'])->first();
             // $freq_order = array_count_values()
-            array_push($arr, ['product_id' => $item->product_id, 'product_count' => $item->product_count]);
+            array_push($products, $most_freq);
+        }
+
+        $arr = [];
+        foreach ($products as $product) {
+            array_push($arr, ['product_id' => $product['product_id'],'product_count'=>$product['product_count']]);
         }
 
         $totals = [];

@@ -14,7 +14,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'required|email|unique',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8'
         ]);
         if ($validator->fails()) {
@@ -23,7 +23,7 @@ class UserController extends Controller
         $user = new User([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
-            'password' => $request->get('password')
+            'password' => Hash::make($request->get('password'))
         ]);
         if ($user->save()) {
             return response()->json([
@@ -65,16 +65,30 @@ class UserController extends Controller
             ], 500);
         }
     }
-    public function login(Request $request) {
-        $request->validate([
+    public function login(Request $request)
+    {
+        $validators = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|min:8',
         ]);
+
+        if ($validators->fails()) {
+            return response()->json([
+                'msg' => 'Error validation',
+                'error' => $validators->errors()
+            ]);
+        }
+
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+            // create token for user
+            $user = User::where('id', Auth::user()->id)->first();
+            $token = $user->createToken('user-token')->plainTextToken;
+
             return response()->json([
-                "msg" => "Login berhasil"
+                "msg" => "Login berhasil",
+                'data' => $user,
+                'token' => $token
             ], 200);
         } else {
             return response()->json([
@@ -82,4 +96,13 @@ class UserController extends Controller
             ], 500);
         }
     }
+
+    public function logout(Request $req) {
+        $req->user()->currentAccessToken()->delete();
+    
+        return response()->json([
+            'msg' => 'Berhasil Logout'
+        ]);
+    }
 }
+

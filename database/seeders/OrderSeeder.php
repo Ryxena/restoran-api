@@ -21,16 +21,16 @@ class OrderSeeder extends Seeder
             'total_price' => 120000
         ]);
         Order::create([
-            'user_id' => 1,
+            'user_id' => 2,
             'date' => Carbon::now(),
             'status' => 'paid',
             'total_price' => 240000
         ]);
         Order::create([
-            'user_id' => 1,
+            'user_id' => 3,
             'date' => Carbon::now(),
             'status' => 'paid',
-            'total_price' => 140000
+            'total_price' => 220000
         ]);
     }
 }

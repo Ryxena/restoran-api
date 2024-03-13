@@ -34,7 +34,7 @@ class OrderController extends Controller
      */
     public function store(Request $request, $id)
     {
-        $product = Product::where('id', $id);
+        $product = Product::where('id', $id)->first();
 
         $order_check = Order::where('user_id', Auth::user()->id)->where('status', 'no-paid')->first();
         if (empty($order_check)) {
@@ -42,8 +42,11 @@ class OrderController extends Controller
             $order->user_id = Auth::user()->id;
             $order->date = Carbon::now();
             $order->status = 'no-paid';
-            $order->total_price = 0;
+            $order->total_price = $product->price * $request->product_count;
             $order->save();
+        } else {
+            $order_check->total_price += $product->price * $request->product_count;
+            $order_check->update();
         }
 
         $new_order = Order::where('user_id', Auth::user()->id)->where('status', 'no-paid')->first();
@@ -57,10 +60,9 @@ class OrderController extends Controller
             $order_detail->total_price = $product->price * $request->product_count;
             $order_detail->save();
         } else {
-            $order_detail = new OrderDetail();
-            $order_detail->product_count += $request->product_count;
-            $order->detail->total_price += $product->price * $request->product_count;
-            $order_detail->update();
+            $check_order_detail->product_count += $request->product_count;
+            $check_order_detail->total_price += $product->price * $request->product_count;
+            $check_order_detail->update();
         }
 
         return response()->json([
@@ -79,7 +81,7 @@ class OrderController extends Controller
         $order_details = OrderDetail::where('order_id', $order->id)->get();
 
         foreach ($order_details as $order_detail) {
-            $product = new Product();
+            $product = Product::where('id', $order_detail->product_id)->first();
             $product->stock -= $order_detail->product_count;
             $product->update();
         }
@@ -105,7 +107,6 @@ class OrderController extends Controller
 
             if (empty($check_transaction)) {
                 $datas = TransactionReport::create([
-                    'order_id' => null,
                     'date' => Carbon::now(),
                     'status' => $amount > 50000 ? 'profit' : 'loss',
                     'amount' => $amount
