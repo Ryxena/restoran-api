@@ -43,5 +43,17 @@ class OrderDetailSeeder extends Seeder
             'product_count' => 1,
             'total_price' => 100000
         ]);
+        OrderDetail::create([
+            'order_id' => 4,
+            'product_id' => 3,
+            'product_count' => 1,
+            'total_price' => 100000
+        ]);
+        OrderDetail::create([
+            'order_id' => 5,
+            'product_id' => 3,
+            'product_count' => 1,
+            'total_price' => 100000
+        ]);
     }
 }

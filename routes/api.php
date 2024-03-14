@@ -35,5 +35,6 @@ Route::middleware('auth:sanctum')->controller(OrderController::class)->group(fun
 
 // For Admin
 Route::prefix('/admin')->middleware(['auth:sanctum','auth.admin'])->group(function(){
-    Route::get('/transaction-report', [OrderController::class, 'transaction_report']);
+    Route::get('/transaction-report-days/{date}', [OrderController::class, 'transaction_report_by_day']);
+    Route::get('/transaction-report-months/{month}', [OrderController::class, 'transaction_report_by_month']);
 });

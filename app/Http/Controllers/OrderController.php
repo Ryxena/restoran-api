@@ -91,23 +91,32 @@ class OrderController extends Controller
         ]);
     }
 
-    public function transaction_report(Request $request)
+    public function transaction_report_by_day(Request $request, $date)
     {
-        // hitung per hari
-        $orders_per_day = Order::where('date', Carbon::now()->format('Y-m-d'))->where('status', 'paid')->get();
-        // dd(Carbon::now()->format('Y-m-d'));
+        // Mendapatkan tanggal awal dan akhir dari hari yang diinput
+        $fullDate = Carbon::now()->format('Y-m') . '-' . $date;
+        $startOfDay = Carbon::createFromFormat('Y-m-d', $fullDate)->startOfDay();
+        $endOfDay = Carbon::createFromFormat('Y-m-d', $fullDate)->endOfDay();
+
+        // Menghitung transaksi per hari dalam rentang bulan yang ditentukan
+        $orders_per_day = Order::whereBetween('date', [$startOfDay, $endOfDay])
+            ->where('status', 'paid')
+            ->get();
+
         if (count($orders_per_day) > 0) {
             $amount = 0;
             foreach ($orders_per_day as $item) {
                 $amount += $item->total_price;
             }
 
-            // cek dah ada atau belum
-            $check_transaction = TransactionReport::where('date', Carbon::now()->format('Y-m-d'))->first();
+            // Memeriksa apakah laporan transaksi untuk bulan ini sudah ada atau belum
+            $check_transaction = TransactionReport::where('date', '>=', $startOfDay)
+                ->where('date', '<=', $endOfDay)
+                ->first();
 
             if (empty($check_transaction)) {
                 $datas = TransactionReport::create([
-                    'date' => Carbon::now(),
+                    'date' => $fullDate,
                     'status' => $amount > 50000 ? 'profit' : 'loss',
                     'amount' => $amount
                 ]);
@@ -133,6 +142,60 @@ class OrderController extends Controller
             'error' => 'Gagal ambil data'
         ]);
     }
+
+    public function transaction_report_by_month(Request $request, $month)
+    {
+        // Mendapatkan tanggal awal dan akhir dari bulan yang diinput
+        $fullDate = Carbon::now()->format('Y-' . $month . '-d');
+        $startOfMonth = Carbon::createFromFormat('m', $month)->startOfMonth();
+        $endOfMonth = Carbon::createFromFormat('m', $month)->endOfMonth();
+
+        // Menghitung transaksi per hari dalam rentang bulan yang ditentukan
+        $orders_per_month = Order::whereBetween('date', [$startOfMonth, $endOfMonth])
+            ->where('status', 'paid')
+            ->get();
+
+        if (count($orders_per_month) > 0) {
+            $totalAmount = 0;
+            foreach ($orders_per_month as $order) {
+                $totalAmount += $order->total_price;
+            }
+
+            // Memeriksa apakah laporan transaksi untuk bulan ini sudah ada atau belum
+            $transactionReport = TransactionReport::where('date', '>=', $startOfMonth)
+                ->where('date', '<=', $endOfMonth)
+                ->first();
+
+            if (empty($transactionReport)) {
+                $transactionReport = TransactionReport::create([
+                    'date' => $fullDate,
+                    'status' => $totalAmount > 50000 ? 'profit' : 'loss',
+                    'amount' => $totalAmount
+                ]);
+            } else {
+                $transactionReport->update([
+                    'amount' => $totalAmount,
+                    'status' => $totalAmount > 50000 ? 'profit' : 'loss'
+                ]);
+
+                return response()->json([
+                    'msg' => 'Berhasil memperbarui laporan transaksi untuk bulan ini',
+                    'data' => $transactionReport
+                ]);
+            }
+
+            return response()->json([
+                'msg' => 'Berhasil membuat laporan transaksi untuk bulan ini',
+                'data' => $transactionReport
+            ]);
+        }
+
+        return response()->json([
+            'msg' => 'Gagal membuat laporan transaksi untuk bulan ini',
+            'error' => 'Tidak ada data transaksi pada bulan yang dimaksud'
+        ]);
+    }
+
 
     /**
      * Display the specified resource.
