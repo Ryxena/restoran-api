@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use App\Models\product;
+use App\Models\Product;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 
@@ -36,7 +36,7 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(product $product)
+    public function show()
     {
         $orders = Order::where('status', 'paid')->get();
 

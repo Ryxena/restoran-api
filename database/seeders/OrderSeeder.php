@@ -32,5 +32,17 @@ class OrderSeeder extends Seeder
             'status' => 'paid',
             'total_price' => 220000
         ]);
+        Order::create([
+            'user_id' => 3,
+            'date' => Carbon::now()->subMonth(),
+            'status' => 'paid',
+            'total_price' => 100000
+        ]);
+        Order::create([
+            'user_id' => 3,
+            'date' => Carbon::now()->subDay(),
+            'status' => 'paid',
+            'total_price' => 100000
+        ]);
     }
 }
