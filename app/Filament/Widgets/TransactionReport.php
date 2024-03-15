@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\User;
+use App\Models\Order;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
 use Filament\Widgets\ChartWidget;
@@ -13,11 +14,12 @@ class TransactionReport extends ChartWidget
     
     protected function getData(): array
     {
-        $data = Trend::model(User::class)
+        $data = Trend::query(Order::where('status', 'paid'))
         ->between(
             start: now()->startOfYear(),
             end: now()->endOfYear(),
         )
+        ->dateAlias('dates')
         ->perMonth()
         ->count();
     return [
