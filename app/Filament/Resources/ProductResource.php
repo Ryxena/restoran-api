@@ -38,7 +38,7 @@ class ProductResource extends Resource
                 Forms\Components\Select::make('category_id')
                     ->label('Category')
                     ->required()
-                    ->options(Categories::whereNotNull('category')->pluck('category', 'id'))
+                    ->options(Category::whereNotNull('category')->pluck('category', 'id'))
                     ->searchable(),
             ]);
     }
