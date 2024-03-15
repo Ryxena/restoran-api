@@ -42,6 +42,10 @@ class ProductResource extends Resource
                     ->searchable(),
                 Forms\Components\TextInput::make('stock')
                     ->required(),
+                Forms\Components\FileUpload::make('image')
+                    ->previewable(true)
+                    ->image()
+                    ->directory('images')
             ]);
     }
 
