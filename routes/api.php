@@ -29,8 +29,10 @@ Route::prefix('/auth')->controller(UserController::class)->group(function () {
 
 Route::middleware('auth:sanctum')->controller(OrderController::class)->group(function () {
     Route::post('/add-cart/{id}', 'store');
+    Route::get('/cart', 'cart');
     Route::post('/checkout', 'checkout');
     Route::get('/most-freq-product', [ProductController::class, 'show']);
+    Route::get('/products',[ProductController::class, 'index']);
 });
 
 // For Admin

@@ -14,25 +14,68 @@ class ProductSeeder extends Seeder
     public function run(): void
     {
         Product::create([
-            'name' => 'Espresso',
+            'name' => 'Americano Coffee',
+            'image' => '01.jpg',
             'stock' => 10,
             'category_id' => 2,
-            'description' => 'Kopi dengan rasa yang tinggi',
-            'price' => 120000
+            'description' => 'Milk with vanilla flavored',
+            'price' => 50000
         ]);
         Product::create([
-            'name' => 'Kopi Kapal Api',
+            'name' => 'Milk Cream Coffee',
+            'image' => '02.jpg',
             'stock' => 10,
             'category_id' => 1,
-            'description' => 'Kopi dengan rasa kayu kapal',
-            'price' => 20000
+            'description' => 'Milk with vanilla flavored',
+            'price' => 30000
         ]);
         Product::create([
-            'name' => 'Kopi Imitasi',
+            'name' => 'Fresh Black Coffee',
+            'image' => '03.jpg',
             'stock' => 10,
             'category_id' => 1,
-            'description' => 'Kopi ngga bisa diminum',
-            'price' => 100000
+            'description' => 'Milk with vanilla flavored',
+            'price' => 90000
+        ]);
+        Product::create([
+            'name' => 'Milk Cream Coffee',
+            'image' => '04.jpg',
+            'stock' => 10,
+            'category_id' => 1,
+            'description' => 'Milk with vanilla flavored',
+            'price' => 90000
+        ]);
+        Product::create([
+            'name' => 'Cappuccino Indoneca',
+            'image' => '05.jpg',
+            'stock' => 10,
+            'category_id' => 1,
+            'description' => 'Milk with vanilla flavored',
+            'price' => 90000
+        ]);
+        Product::create([
+            'name' => 'Special Raw Coffee',
+            'image' => '06.jpg',
+            'stock' => 10,
+            'category_id' => 1,
+            'description' => 'Milk with vanilla flavored',
+            'price' => 90000
+        ]);
+        Product::create([
+            'name' => 'Cappuccino Arabica',
+            'image' => '07.jpg',
+            'stock' => 10,
+            'category_id' => 1,
+            'description' => 'Milk with vanilla flavored',
+            'price' => 90000
+        ]);
+        Product::create([
+            'name' => 'Cold Coffee',
+            'image' => '08.jpg',
+            'stock' => 10,
+            'category_id' => 1,
+            'description' => 'Milk with vanilla flavored',
+            'price' => 90000
         ]);
     }
 }

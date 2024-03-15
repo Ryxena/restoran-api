@@ -45,6 +45,7 @@ class OrderController extends Controller
             $order->total_price = $product->price * $request->product_count;
             $order->save();
         } else {
+            $order_check->date = Carbon::now();
             $order_check->total_price += $product->price * $request->product_count;
             $order_check->update();
         }
@@ -67,6 +68,30 @@ class OrderController extends Controller
 
         return response()->json([
             'msg' => 'Berhasil masuk ke cart'
+        ]);
+    }
+
+    public function cart()
+    {
+        $order = Order::where('user_id', Auth::user()->id)->where('status','no-paid')->first();
+        
+        if (!$order) {
+            return response()->json([
+                'msg' => 'My Cart No Content',
+            ]);
+        }
+
+        $order_details = OrderDetail::where('order_id', $order->id)->get();
+
+        $products = [];
+        foreach ($order_details as $item) {
+            $product = Product::where('id', $item->product_id)->first();
+            array_push($products, $product);
+        }
+
+        return response()->json([
+            'msg' => 'Get My Cart',
+            'datas' => $products, 'total_price' => $order->total_price
         ]);
     }
 

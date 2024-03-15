@@ -18,7 +18,10 @@ class UserController extends Controller
             'password' => 'required|min:8'
         ]);
         if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
+            return response()->json([
+                'msg' => 'validation error',
+                'error' => $validator->errors()
+            ],422);
         }
         $user = new User([
             'name' => $request->get('name'),
@@ -76,7 +79,7 @@ class UserController extends Controller
             return response()->json([
                 'msg' => 'Error validation',
                 'error' => $validators->errors()
-            ]);
+            ],422);
         }
 
         $credentials = $request->only('email', 'password');
