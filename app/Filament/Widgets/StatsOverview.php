@@ -31,7 +31,7 @@ class StatsOverview extends BaseWidget
         ->average('total_price');
         $resultday = $data_perday->map(fn (TrendValue $value) => number_format($value->aggregate, 0, '.', ''))->implode(', ');
         return [
-            Stat::make('Pendapatan rerata perbulan', $resultmonth)
+            Stat::make('Pendapatan rerata perbulan', 'Rp ' . $resultmonth)
                 ->description('Pendapat rata rata bulanan'),
             Stat::make('Pendapatan perhari', $resultday)
                 ->description('Rata rata pendapat perhari')
