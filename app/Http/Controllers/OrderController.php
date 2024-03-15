@@ -7,8 +7,8 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\OrderDetail;
-use App\Models\TransactionReport;
 use Illuminate\Http\Request;
+use App\Models\TransactionReport;
 use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
@@ -90,7 +90,6 @@ class OrderController extends Controller
             'msg' => 'Berhasil Checkout'
         ]);
     }
-
     public function transaction_report_by_day(Request $request, $date)
     {
         // Mendapatkan tanggal awal dan akhir dari hari yang diinput

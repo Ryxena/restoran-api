@@ -12,7 +12,7 @@ use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 
 class TotalProductOverview extends BaseWidget
 {
-    protected static ?int $sort = 1;
+    protected static ?int $sort = -2;
     protected int | string | array $columnSpan = 'full';
     protected function getStats(): array
     {
@@ -48,7 +48,7 @@ class TotalProductOverview extends BaseWidget
                 ->descriptionIcon('heroicon-m-arrow-trending-up'),
             Stat::make('Produk paling laris', $most_product->name)
                 ->descriptionIcon('heroicon-m-arrow-trending-up'),
-            Stat::make('Total Transaksi ', $date)
+            Stat::make('Total Transaksi Hari ini', $date)
                 ->descriptionIcon('heroicon-m-arrow-trending-up'),
         ];
     }

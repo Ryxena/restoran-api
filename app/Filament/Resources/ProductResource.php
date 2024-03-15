@@ -40,6 +40,8 @@ class ProductResource extends Resource
                     ->required()
                     ->options(Category::whereNotNull('category')->pluck('category', 'id'))
                     ->searchable(),
+                Forms\Components\TextInput::make('stock')
+                    ->required(),
             ]);
     }
 
@@ -53,6 +55,9 @@ class ProductResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('price')
                     ->money('IDR')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('stock')
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('category_id')
                     ->numeric()

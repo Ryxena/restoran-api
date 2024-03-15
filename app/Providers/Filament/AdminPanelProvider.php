@@ -7,8 +7,9 @@ use Filament\Panel;
 use Filament\Widgets;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use App\Filament\Widgets\PenjualanChart;
 use Filament\Http\Middleware\Authenticate;
+use App\Filament\Widgets\TransactionReport;
+use App\Filament\Widgets\TransaksiOverview;
 use App\Filament\Widgets\TotalProductOverview;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -40,7 +41,6 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 TotalProductOverview::class,
-                PenjualanChart::class
             ])
             ->middleware([
                 EncryptCookies::class,
