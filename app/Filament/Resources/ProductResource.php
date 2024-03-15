@@ -44,8 +44,9 @@ class ProductResource extends Resource
                     ->required(),
                 Forms\Components\FileUpload::make('image')
                     ->previewable(true)
+                    ->disk('publiks')
                     ->image()
-                    ->directory('images')
+                    ->moveFiles()
             ]);
     }
 
