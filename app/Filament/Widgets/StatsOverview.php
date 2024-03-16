@@ -30,11 +30,13 @@ class StatsOverview extends BaseWidget
         ->perMonth()
         ->average('total_price');
         $resultday = $data_perday->map(fn (TrendValue $value) => number_format($value->aggregate, 0, '.', ''))->implode(', ');
+        $isprofitmonth = ($resultmonth >= 100000) ? 'Untung' : 'Rugi';
+        $isprofitday = ($resultday >= 100000) ? 'Untung' : 'Rugi';
         return [
-            Stat::make('Pendapatan rerata perbulan', 'Rp ' . $resultmonth)
-                ->description('Pendapat rata rata bulanan'),
+            Stat::make('Pendapat rata rata bulanan', 'Rp ' . $resultmonth)
+                ->description('Pendapat rata rata bulanan ' . $isprofitmonth),
             Stat::make('Pendapatan perhari', $resultday)
-                ->description('Rata rata pendapat perhari')
+                ->description('Rata rata pendapat perhari ' . $isprofitday)
         ];
     }
 }
