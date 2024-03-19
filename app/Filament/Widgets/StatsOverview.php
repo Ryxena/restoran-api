@@ -13,28 +13,30 @@ class StatsOverview extends BaseWidget
     protected function getStats(): array
     {
         $data_permonth = Trend::query(Order::where('status', 'paid'))
-        ->between(
-            start: now()->startOfMonth(),
-            end: now()->endOfMonth(),
+            ->between(
+                start: now()->startOfMonth(),
+                end: now()->endOfMonth(),
             )
             ->dateAlias('alias')
-        ->perMonth()
-        ->average('total_price');
+            ->perMonth()
+            ->average('total_price');
         $resultmonth = $data_permonth->map(fn (TrendValue $value) => number_format($value->aggregate, 0, '.', ''))->implode(', ');
         $data_perday = Trend::query(Order::where('status', 'paid'))
-        ->between(
-            start: now()->startOfDay(),
-            end: now()->startOfDay(),
+            ->between(
+                start: now()->startOfDay(),
+                end: now()->endOfDay(),
             )
             ->dateAlias('alias')
-        ->perMonth()
-        ->average('total_price');
+            ->perDay()
+            ->average('total_price');
         $resultday = $data_perday->map(fn (TrendValue $value) => number_format($value->aggregate, 0, '.', ''))->implode(', ');
+        $isprofitmonth = ($resultmonth >= 100000) ? 'Untung' : 'Rugi';
+        $isprofitday = ($resultday >= 100000) ? 'Untung' : 'Rugi';
         return [
-            Stat::make('Pendapatan rerata perbulan', 'Rp ' . $resultmonth)
-                ->description('Pendapat rata rata bulanan'),
-            Stat::make('Pendapatan perhari', $resultday)
-                ->description('Rata rata pendapat perhari')
+            Stat::make('Pendapat rata rata bulanan', 'Rp ' . number_format($resultmonth, 2, ',', '.'))
+                ->description('Pendapat rata rata bulanan ' . $isprofitmonth),
+            Stat::make('Pendapatan perhari', 'Rp ' . number_format($resultday, 2, ',', '.'))
+                ->description('Rata rata pendapat perhari ' . $isprofitday)
         ];
     }
 }
